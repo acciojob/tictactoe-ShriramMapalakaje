@@ -1,56 +1,56 @@
-/*  your css code here. If applicable */
 body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
     text-align: center;
+    font-family: Arial, sans-serif;
 }
 
 h1 {
-    font-family: 'Permanent Marker', cursive; /* To mimic the handwritten style */
+    font-family: 'Permanent Marker', cursive; /* To match the handwritten style in your image */
     font-size: 3rem;
 }
 
-.input-group {
-    margin: 10px 0;
+#setup {
+    margin-top: 50px;
+}
+
+.input-block {
+    margin: 10px;
+    font-size: 1.5rem;
 }
 
 input {
     padding: 8px;
-    font-size: 1.2rem;
+    margin-left: 10px;
     border: 2px solid black;
+    font-size: 1.2rem;
 }
 
-button {
+#submit {
     margin-top: 20px;
-    padding: 10px 40px;
+    padding: 10px 60px;
     font-size: 1.2rem;
     background: white;
     border: 2px solid black;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .message {
     font-size: 1.5rem;
-    margin-bottom: 15px;
-    font-weight: bold;
+    margin: 20px 0;
 }
 
-/* The Grid */
 .board {
     display: grid;
     grid-template-columns: repeat(3, 120px);
     grid-template-rows: repeat(3, 120px);
-    gap: 0;
     margin: 0 auto;
-    border: 2px solid black;
     width: 360px;
+    border: 1px solid black;
 }
 
 .cell {
     border: 1px solid black;
-    background-color: pink;
+    background-color: pink; /* Match your pink screenshot */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,26 +59,7 @@ button {
     cursor: pointer;
 }
 
-/* Winning row background from your screenshot */
+/* Match the purple background for winning cells in your screenshot */
 .cell.winner {
     background-color: purple;
-    color: black;
 }
-.board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    margin: 20px auto;
-    width: 300px;
-}
-.cell {
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    cursor: pointer;
-    height: 100px;
-}
-#setup { margin: 20px; }
-input { display: block; margin: 10px auto; }

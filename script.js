@@ -1,71 +1,72 @@
 const submitBtn = document.getElementById('submit');
 const setupDiv = document.getElementById('setup');
-const gameContainer = document.getElementById('game-container');
+const gameDiv = document.getElementById('game-screen');
 const messageDiv = document.querySelector('.message');
 const cells = document.querySelectorAll('.cell');
 
-let p1 = "";
-let p2 = "";
-let currentPlayer = "";
-let gameActive = true;
-let boardState = ["", "", "", "", "", "", "", "", ""];
+let player1, player2;
+let currentPlayer;
+let boardState = Array(9).fill("");
+let isGameActive = true;
 
-const winningConditions = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
+const winPatterns = [
+    [0,1,2], [3,4,5], [6,7,8], // Rows
+    [0,3,6], [1,4,7], [2,5,8], // Cols
+    [0,4,8], [2,4,6]           // Diagonals
 ];
 
 submitBtn.addEventListener('click', () => {
-    // Selectors updated to match Cypress (no hyphen)
-    p1 = document.getElementById('player1').value || "Player 1";
-    p2 = document.getElementById('player2').value || "Player 2";
+    player1 = document.getElementById('player-1').value || "Player 1";
+    player2 = document.getElementById('player-2').value || "Player 2";
     
-    currentPlayer = p1;
+    currentPlayer = player1;
     setupDiv.style.display = 'none';
-    gameContainer.style.display = 'block';
-    // Test 1 & 2 expect exactly: "{name}, you're up"
-    messageDiv.textContent = `${currentPlayer}, you're up`;
+    gameDiv.style.display = 'block';
+    messageDiv.innerText = `${currentPlayer}, you're up`;
 });
 
 cells.forEach(cell => {
     cell.addEventListener('click', () => {
-        const index = parseInt(cell.id) - 1;
-        if (boardState[index] !== "" || !gameActive) return;
+        const id = parseInt(cell.id) - 1;
+        
+        if (boardState[id] !== "" || !isGameActive) return;
 
-        const symbol = (currentPlayer === p1) ? "x" : "o";
-        boardState[index] = symbol;
-        cell.textContent = symbol;
+        const symbol = (currentPlayer === player1) ? "x" : "o";
+        boardState[id] = symbol;
+        cell.innerText = symbol;
 
-        checkResult();
+        checkWinner();
     });
 });
 
-function checkResult() {
-    let roundWon = false;
+function checkWinner() {
+    let won = false;
 
-    for (let condition of winningConditions) {
-        const [a, b, c] = condition;
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
         if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
-            roundWon = true;
+            won = true;
+            // Highlight the winning row in purple
+            [a, b, c].forEach(index => {
+                document.getElementById((index + 1).toString()).classList.add('winner');
+            });
             break;
         }
     }
 
-    if (roundWon) {
-        // Test 2 & 3 expect exactly: "{name} congratulations you won!"
-        messageDiv.textContent = `${currentPlayer} congratulations you won!`;
-        gameActive = false;
+    if (won) {
+        messageDiv.innerText = `${currentPlayer}, congratulations you won!`;
+        isGameActive = false;
         return;
     }
 
     if (!boardState.includes("")) {
-        messageDiv.textContent = "It's a draw!";
-        gameActive = false;
+        messageDiv.innerText = "Draw!";
+        isGameActive = false;
         return;
     }
 
-    // Toggle turn
-    currentPlayer = (currentPlayer === p1) ? p2 : p1;
-    messageDiv.textContent = `${currentPlayer}, you're up`;
+    // Swap turns
+    currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    messageDiv.innerText = `${currentPlayer}, you're up`;
 }
