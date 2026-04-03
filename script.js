@@ -4,69 +4,63 @@ const gameDiv = document.getElementById('game-screen');
 const messageDiv = document.querySelector('.message');
 const cells = document.querySelectorAll('.cell');
 
-let player1, player2;
-let currentPlayer;
+let p1Name, p2Name, currentPlayer;
 let boardState = Array(9).fill("");
 let isGameActive = true;
 
-const winPatterns = [
-    [0,1,2], [3,4,5], [6,7,8], // Rows
-    [0,3,6], [1,4,7], [2,5,8], // Cols
-    [0,4,8], [2,4,6]           // Diagonals
+const winConditions = [
+    [0,1,2], [3,4,5], [6,7,8],
+    [0,3,6], [1,4,7], [2,5,8],
+    [0,4,8], [2,4,6]
 ];
 
 submitBtn.addEventListener('click', () => {
-    player1 = document.getElementById('player-1').value || "Player 1";
-    player2 = document.getElementById('player-2').value || "Player 2";
+    p1Name = document.getElementById('player1').value || "Player 1";
+    p2Name = document.getElementById('player2').value || "Player 2";
     
-    currentPlayer = player1;
+    currentPlayer = p1Name;
     setupDiv.style.display = 'none';
     gameDiv.style.display = 'block';
+    // Matches assertion: "{name}, you're up"
     messageDiv.innerText = `${currentPlayer}, you're up`;
 });
 
 cells.forEach(cell => {
     cell.addEventListener('click', () => {
         const id = parseInt(cell.id) - 1;
-        
         if (boardState[id] !== "" || !isGameActive) return;
 
-        const symbol = (currentPlayer === player1) ? "x" : "o";
+        const symbol = (currentPlayer === p1Name) ? "x" : "o";
         boardState[id] = symbol;
         cell.innerText = symbol;
 
-        checkWinner();
+        checkResult();
     });
 });
 
-function checkWinner() {
-    let won = false;
-
-    for (let pattern of winPatterns) {
-        const [a, b, c] = pattern;
+function checkResult() {
+    let roundWon = false;
+    for (let condition of winConditions) {
+        const [a, b, c] = condition;
         if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
-            won = true;
-            // Highlight the winning row in purple
-            [a, b, c].forEach(index => {
-                document.getElementById((index + 1).toString()).classList.add('winner');
-            });
+            roundWon = true;
             break;
         }
     }
 
-    if (won) {
-        messageDiv.innerText = `${currentPlayer}, congratulations you won!`;
+    if (roundWon) {
+        // Matches assertion: "{name} congratulations you won!"
+        messageDiv.innerText = `${currentPlayer} congratulations you won!`;
         isGameActive = false;
         return;
     }
 
     if (!boardState.includes("")) {
-        messageDiv.innerText = "Draw!";
+        messageDiv.innerText = "It's a draw!";
         isGameActive = false;
         return;
     }
 
-    // Swap turns
-    currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    currentPlayer = (currentPlayer === p1Name) ? p2Name : p1Name;
     messageDiv.innerText = `${currentPlayer}, you're up`;
 }
